@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, BrowserRouter } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 import Navbar from './components/Navbar'
@@ -9,6 +9,7 @@ import Register from './pages/Register'
 import ChatPage from './pages/ChatPage'
 import HomePage from './pages/HomePage'
 import { authApi } from './Api/AuthApi'
+import {Toaster} from 'react-hot-toast'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -19,7 +20,8 @@ const App = () => {
   }, [dispatch])
 
   return (
-    <Router>
+    <BrowserRouter>
+    
       <Navbar />
       <Routes>
         {/* Home Page */}
@@ -42,7 +44,14 @@ const App = () => {
         {/* 404 Route */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-    </Router>
+
+     
+     
+   
+     <Toaster position="top-right" />
+    </BrowserRouter>
+   
+   
   )
 }
 

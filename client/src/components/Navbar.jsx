@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { Userlogout } from '../redux/AuthSlice'
+import toast from 'react-hot-toast'
 
 const Navbar = () => {
   const dispatch = useDispatch()
@@ -11,6 +12,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     dispatch(Userlogout())
+    toast.success("logout successfuly")
     navigate('/login')
     setIsMenuOpen(false)
   }

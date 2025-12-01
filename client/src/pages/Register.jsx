@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { authApi } from '../Api/AuthApi'
+import { authApi, useRegisterMutation } from '../Api/AuthApi'
+import toast from 'react-hot-toast'
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -17,6 +18,8 @@ const Register = () => {
   const dispatch = useDispatch()
   const { isAuthenticated } = useSelector((state) => state.authSlice)
 
+  const [register]=useRegisterMutation()
+
   // Redirect if already logged in
   React.useEffect(() => {
     if (isAuthenticated) {
@@ -24,38 +27,6 @@ const Register = () => {
     }
   }, [isAuthenticated, navigate])
 
-//   const validateForm = () => {
-//     const newErrors = {}
-
-//     if (!formData.name.trim()) {
-//       newErrors.name = 'Name is required'
-//     } else if (formData.name.length < 3) {
-//       newErrors.name = 'Name must be at least 3 characters'
-//     }
-
-//     if (!formData.email) {
-//       newErrors.email = 'Email is required'
-//     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-//       newErrors.email = 'Email is invalid'
-//     }
-
-//     if (!formData.password) {
-//       newErrors.password = 'Password is required'
-//     } else if (formData.password.length < 6) {
-//       newErrors.password = 'Password must be at least 6 characters'
-//     } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-//       newErrors.password =
-//         'Password must contain uppercase, lowercase, and number'
-//     }
-
-//     if (!formData.confirmPassword) {
-//       newErrors.confirmPassword = 'Please confirm your password'
-//     } else if (formData.password !== formData.confirmPassword) {
-//       newErrors.confirmPassword = 'Passwords do not match'
-//     }
-
-//     return newErrors
-//   }
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -74,22 +45,17 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    // const newErrors = validateForm()
-
-    // if (Object.keys(newErrors).length > 0) {
-    //   setErrors(newErrors)
-    //   return
-    // }
-
+  
     setIsLoading(true)
     try {
-      const result = await dispatch(
-        authApi.endpoints.register.initiate({
+      const userData = {
           name: formData.name,
           email: formData.email,
           password: formData.password,
-        })
-      ).unwrap()
+      }
+
+      const result=await register(userData).unwrap()
+      toast.success("register successfully")
 
       if (result) {
         navigate('/login')
@@ -98,6 +64,7 @@ const Register = () => {
       setServerError(
         error?.data?.message || 'Registration failed. Please try again.'
       )
+      toast.error( error?.data?.message || 'Registration failed. Please try again.')
     } finally {
       setIsLoading(false)
     }

@@ -1,40 +1,56 @@
 import React, { useState } from 'react'
 
-const ChatHistory = () => {
-  const [conversations, setConversations] = useState([
-    {
-      id: 1,
-      title: 'First Conversation',
-      date: '2025-12-01',
-      preview: 'Tell me about AI...',
-    },
-    {
-      id: 2,
-      title: 'Web Development Tips',
-      date: '2025-11-30',
-      preview: 'How to build responsive websites...',
-    },
-    {
-      id: 3,
-      title: 'React Best Practices',
-      date: '2025-11-29',
-      preview: 'What are the best practices in React...',
-    },
-    {
-      id: 4,
-      title: 'JavaScript Tricks',
-      date: '2025-11-28',
-      preview: 'Show me advanced JavaScript concepts...',
-    },
-  ])
+const ChatHistory = ({ onNewChat, prompts }) => {
   const [selectedConversation, setSelectedConversation] = useState(null)
 
+  // Build conversation list from server prompts when provided
+  const conversations = Array.isArray(prompts) && prompts.length
+    ? // group prompts into conversation buckets by pairs (simple linear history)
+      prompts.reduce((acc, cur) => {
+        // create a simple conversation per two messages for display purposes
+        const idx = Math.floor(acc.length)
+        acc.push({
+          id: cur._id,
+          title: cur.role === 'user' ? cur.content.slice(0, 30) : 'Assistant Reply',
+          date: cur.createdAt,
+          preview: cur.content.slice(0, 60),
+        })
+        return acc
+      }, [])
+    : [
+        {
+          id: 1,
+          title: 'First Conversation',
+          date: '2025-12-01',
+          preview: 'Tell me about AI...',
+        },
+        {
+          id: 2,
+          title: 'Web Development Tips',
+          date: '2025-11-30',
+          preview: 'How to build responsive websites...',
+        },
+        {
+          id: 3,
+          title: 'React Best Practices',
+          date: '2025-11-29',
+          preview: 'What are the best practices in React...',
+        },
+        {
+          id: 4,
+          title: 'JavaScript Tricks',
+          date: '2025-11-28',
+          preview: 'Show me advanced JavaScript concepts...',
+        },
+      ]
+
   const handleNewChat = () => {
+    if (typeof onNewChat === 'function') return onNewChat()
     setSelectedConversation(null)
   }
 
   const handleDeleteChat = (id) => {
-    setConversations(conversations.filter((conv) => conv.id !== id))
+    // For now just clear selection. If connected to API, this should call delete endpoint.
     setSelectedConversation(null)
   }
 

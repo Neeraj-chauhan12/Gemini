@@ -1,19 +1,19 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Await, Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { authApi } from '../Api/AuthApi'
+import { authApi, useLoginMutation } from '../Api/AuthApi'
+import toast from 'react-hot-toast'
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  })
-  const [errors, setErrors] = useState({})
+ 
+  const [email,setEmail]=useState('')
+  const [password,setPassword]=useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState('')
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { isAuthenticated } = useSelector((state) => state.authSlice)
+  const [login]=useLoginMutation();
 
   // Redirect if already logged in
   React.useEffect(() => {
@@ -24,37 +24,29 @@ const Login = () => {
 
 
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: '',
-      }))
-    }
-    setServerError('')
-  }
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    const userData={
+      email:email,
+      password:password
+
+    }
 
    
 
     setIsLoading(true)
     try {
-      const result = await dispatch(
-        authApi.endpoints.login.initiate(formData)
-      ).unwrap()
+      const result = await login(userData).unwrap();
+      toast.success("login succesfully")
 
       if (result) {
         navigate('/chat')
       }
     } catch (error) {
       setServerError(error?.data?.message || 'Login failed. Please try again.')
+      toast.error(error?.data?.message || 'Login failed. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -89,20 +81,12 @@ const Login = () => {
               <input
                 type="email"
                 name="email"
-                value={formData.email}
-                onChange={handleChange}
+                value={email}
+                onChange={(e)=>setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className={`w-full px-4 py-3 rounded-lg border-2 transition focus:outline-none ${
-                  errors.email
-                    ? 'border-red-500 focus:border-red-600'
-                    : 'border-gray-200 focus:border-blue-500'
-                }`}
+                className={`w-full px-4 py-3 rounded-lg border-2 transition focus:outline-none `}
               />
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1 font-medium">
-                  {errors.email}
-                </p>
-              )}
+             
             </div>
 
             {/* Password Field */}
@@ -113,20 +97,12 @@ const Login = () => {
               <input
                 type="password"
                 name="password"
-                value={formData.password}
-                onChange={handleChange}
+                value={password}
+                onChange={(e)=>setPassword(e.target.value)}
                 placeholder="Enter your password"
-                className={`w-full px-4 py-3 rounded-lg border-2 transition focus:outline-none ${
-                  errors.password
-                    ? 'border-red-500 focus:border-red-600'
-                    : 'border-gray-200 focus:border-blue-500'
-                }`}
+                className={`w-full px-4 py-3 rounded-lg border-2 transition focus:outline-none `}
               />
-              {errors.password && (
-                <p className="text-red-500 text-sm mt-1 font-medium">
-                  {errors.password}
-                </p>
-              )}
+              
             </div>
 
             {/* Submit Button */}

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import ChatHistory from './ChatHistory'
+import { useSendMessageMutation, useGetPromptsQuery } from '../Api/ChatApi'
 
 const ChatPage = () => {
   const { isAuthenticated, user } = useSelector((state) => state.authSlice)
@@ -12,6 +13,8 @@ const ChatPage = () => {
       timestamp: new Date(),
     },
   ])
+  const [sendMessage] = useSendMessageMutation()
+  const { data: promptsData, refetch: refetchPrompts } = useGetPromptsQuery()
   const [inputValue, setInputValue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
@@ -24,6 +27,19 @@ const ChatPage = () => {
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  // When prompts are loaded from server, reconstruct messages (preserve ordering)
+  useEffect(() => {
+    if (promptsData && Array.isArray(promptsData.prompts) && promptsData.prompts.length) {
+      const reconstructed = promptsData.prompts.map((p, idx) => ({
+        id: idx + 1,
+        text: p.content,
+        sender: p.role === 'user' ? 'user' : 'bot',
+        timestamp: new Date(p.createdAt),
+      }))
+      setMessages(reconstructed)
+    }
+  }, [promptsData])
 
   const handleSendMessage = async (e) => {
     e.preventDefault()
@@ -40,17 +56,25 @@ const ChatPage = () => {
     setInputValue('')
     setIsLoading(true)
 
-    // Simulate bot response
-    setTimeout(() => {
-      const botMessage = {
-        id: messages.length + 2,
-        text: `This is a demo response to: "${inputValue}". In a real application, this would connect to an AI API.`,
-        sender: 'bot',
-        timestamp: new Date(),
+    // Send to backend AI endpoint
+    try {
+      const resp = await sendMessage({ message: inputValue }).unwrap()
+      if (resp && resp.assistantPrompt && resp.assistantPrompt.content) {
+        const botMessage = {
+          id: messages.length + 2,
+          text: resp.assistantPrompt.content,
+          sender: 'bot',
+          timestamp: new Date(resp.assistantPrompt.createdAt || Date.now()),
+        }
+        setMessages((prev) => [...prev, botMessage])
       }
-      setMessages((prev) => [...prev, botMessage])
+      // refresh history
+      refetchPrompts()
+    } catch (err) {
+      console.error('sendMessage error', err)
+    } finally {
       setIsLoading(false)
-    }, 1000)
+    }
   }
 
   if (!isAuthenticated) {
@@ -82,7 +106,21 @@ const ChatPage = () => {
           isSidebarOpen ? 'w-64' : 'w-0'
         } transition-all duration-300 bg-white border-r border-gray-200 overflow-hidden`}
       >
-        <ChatHistory />
+        <ChatHistory
+          onNewChat={() => {
+            // reset messages to starter message
+            setMessages([
+              {
+                id: 1,
+                text: 'Hello! I am Gemini AI. How can I help you today?',
+                sender: 'bot',
+                timestamp: new Date(),
+              },
+            ])
+            setInputValue('')
+          }}
+          prompts={promptsData?.prompts || []}
+        />
       </div>
 
       {/* Main Chat Area */}
