@@ -7,5 +7,5 @@ import { chatApi } from '../Api/ChatApi'
 export const appStore=configureStore({
       reducer: rootReducer,
      middleware: (defaultMiddleware) =>
-    defaultMiddleware().concat(authApi.middleware).concat(chatApi.middleware),
+    defaultMiddleware().concat(authApi.middleware,chatApi.middleware),
 })

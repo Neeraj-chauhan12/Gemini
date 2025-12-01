@@ -1,21 +1,21 @@
-import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
-import { Userlogout } from '../redux/AuthSlice'
-import toast from 'react-hot-toast'
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { Userlogout } from "../redux/AuthSlice";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const { isAuthenticated, user } = useSelector((state) => state.authSlice)
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useSelector((state) => state.authSlice);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    dispatch(Userlogout())
-    toast.success("logout successfuly")
-    navigate('/login')
-    setIsMenuOpen(false)
-  }
+    dispatch(Userlogout());
+    toast.success("logout successfuly");
+    navigate("/login");
+    setIsMenuOpen(false);
+  };
 
   return (
     <nav className="bg-linear-to-r from-blue-600 to-blue-800 text-white shadow-lg">
@@ -43,9 +43,26 @@ const Navbar = () => {
                   History
                 </Link>
                 <div className="flex items-center space-x-4">
-                  <span className="text-sm font-semibold bg-blue-500 px-3 py-1 rounded-full">
-                    {user?.name || 'User'}
-                  </span>
+                  <div className="dropdown dropdown-center">
+                      <div className="avatar">
+                        <div tabIndex={0}  className=" w-10 rounded-full">
+                          <img src="https://img.daisyui.com/images/profile/demo/batperson@192.webp" />
+                        </div>
+                      </div>
+                   
+                    <ul
+                      tabIndex="-1"
+                      className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+                    >
+                      <li className="text-black">
+                        Name: {user?.name || "User"}
+                      </li>
+                      <li className="text-black">
+                        Email: {user?.email || "example@gmail.com"}
+                      </li>
+                    </ul>
+                  </div>
+
                   <button
                     onClick={handleLogout}
                     className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition duration-200 font-medium"
@@ -89,8 +106,8 @@ const Navbar = () => {
                 strokeWidth={2}
                 d={
                   isMenuOpen
-                    ? 'M6 18L18 6M6 6l12 12'
-                    : 'M4 6h16M4 12h16M4 18h16'
+                    ? "M6 18L18 6M6 6l12 12"
+                    : "M4 6h16M4 12h16M4 18h16"
                 }
               />
             </svg>
@@ -118,7 +135,7 @@ const Navbar = () => {
                 </Link>
                 <div className="px-4 py-2">
                   <p className="text-sm font-semibold mb-2">
-                    {user?.name || 'User'}
+                    {user?.name || "User"}
                   </p>
                 </div>
                 <button
@@ -150,7 +167,7 @@ const Navbar = () => {
         )}
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
