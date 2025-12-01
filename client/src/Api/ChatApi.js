@@ -1,9 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { DEVELOPMENT_CHAT } from '../utils/utils';
 
 //const CHAT_API = 'http://localhost:4000/api/chat/'
 
-const CHAT_API = import.meta.env.DEVELOPMENT_CHAT
-  ? `${import.meta.env.DEVELOPMENT_CHAT}/`
+const CHAT_API =DEVELOPMENT_CHAT
+  ? `${DEVELOPMENT_CHAT}/`
   : "http://localhost:3000/api/chat/";
 
 

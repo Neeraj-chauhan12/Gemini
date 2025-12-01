@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Userlogin, Userlogout } from '../redux/AuthSlice'
+import {DEVELOPMENT_USER} from '../utils/utils.js'
 
-const USER_API = import.meta.env.DEVELOPMENT_USER
-  ? `${import.meta.env.DEVELOPMENT_USER}/`
+const USER_API = `${DEVELOPMENT_USER}`
+  ? `${DEVELOPMENT_USER}/`
   : "http://localhost:3000/api/user/";
 
 export const authApi = createApi({
