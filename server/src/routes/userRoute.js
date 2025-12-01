@@ -4,9 +4,9 @@ const { AuthMiddleware } = require('../middleware/AuthMiddleware');
 const router=express.Router();
 
 router.post("/register",Register),
-router.post("login",Login)
-router.get("logout",logout)
-router.get("profile",AuthMiddleware,getProfile)
+router.post("/login",Login)
+router.get("/logout",logout)
+router.get("/profile",AuthMiddleware,getProfile)
 
 
 module.exports=router
