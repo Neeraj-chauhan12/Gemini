@@ -12,7 +12,6 @@ dotenv.config();
 
 app.use(cors({
     origin:[
-        "http://localhost:5173",
         "https://chatt12.netlify.app"
     ],
     methods:["GET","POST","PUT","DELETE"],
