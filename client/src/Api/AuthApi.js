@@ -39,21 +39,21 @@ export const authApi = createApi({
      
     }),
 
-    // loadUser: builder.query({
-    //   query: () => ({
-    //     url: "/profile",
-    //     method: "GET",
-    //   }),
+    loadUser: builder.query({
+      query: () => ({
+        url: "/profile",
+        method: "GET",
+      }),
 
-    //    async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-    //     try {
-    //       const result = await queryFulfilled;
-    //       dispatch(Userlogin({ user: result.data.user }));
-    //     } catch (error) {
-    //       console.log(error.message);
-    //     }
-    //   },
-    // }),
+       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const result = await queryFulfilled;
+          dispatch(Userlogin({ user: result.data.user }));
+        } catch (error) {
+          console.log(error.message);
+        }
+      },
+    }),
 
 
     LogoutUser:builder.mutation({
