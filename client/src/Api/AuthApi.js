@@ -16,7 +16,7 @@ export const authApi = createApi({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (inputData) => ({
-        url: "login",
+        url: "/login",
         method: "POST",
         body: inputData,
       }),
@@ -32,33 +32,33 @@ export const authApi = createApi({
 
     register: builder.mutation({
       query: (inputData) => ({
-        url: "register",
+        url: "/register",
         method: "POST",
         body: inputData,
       }),
      
     }),
 
-    loadUser: builder.query({
-      query: () => ({
-        url: "profile",
-        method: "GET",
-      }),
+    // loadUser: builder.query({
+    //   query: () => ({
+    //     url: "/profile",
+    //     method: "GET",
+    //   }),
 
-       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const result = await queryFulfilled;
-          dispatch(Userlogin({ user: result.data.user }));
-        } catch (error) {
-          console.log(error.message);
-        }
-      },
-    }),
+    //    async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+    //     try {
+    //       const result = await queryFulfilled;
+    //       dispatch(Userlogin({ user: result.data.user }));
+    //     } catch (error) {
+    //       console.log(error.message);
+    //     }
+    //   },
+    // }),
 
 
     LogoutUser:builder.mutation({
         query:()=>({
-            url:"logout",
+            url:"/logout",
             method:"GET",
         }),
 
@@ -79,7 +79,6 @@ export const authApi = createApi({
 export const {
   useLoginMutation,
   useLoadUserQuery,
-  useUpdateUserMutation,
   useRegisterMutation,
   useLogoutUserMutation
 } = authApi;
