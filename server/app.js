@@ -11,7 +11,11 @@ const app=express()
 dotenv.config();
 
 app.use(cors({
-    origin:"https://chatt12.netlify.app" ,
+    origin:[
+        "http://localhost:5173",
+        "https://chatt12.netlify.app"
+    ],
+    methods:["GET","POST","PUT","DELETE"],
     credentials: true,
    
 }));
