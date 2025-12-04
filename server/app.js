@@ -10,10 +10,14 @@ const cookieParser=require('cookie-parser')
 const app=express()
 dotenv.config();
 
+
+const allowedOrgin=[
+    "http://localhost:5173",
+    "https://chatt123.netlify.app",
+
+]
 app.use(cors({
-    origin:[
-        "https://chatt123.netlify.app"
-    ],
+    origin:allowedOrgin,
     methods:["GET","POST","PUT","DELETE"],
     credentials: true,
    
