@@ -52,7 +52,7 @@ exports.Login=async(req,res)=>{
       
         // generate token
         const token=jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:'24h'})
-        res.cookie("token",token,{httpOnly:true})
+        res.cookie("token",token,{httpOnly:true,secure:true,sameSite:"none"})
         res.json({message:"login succusssfully",user,token})
 
 

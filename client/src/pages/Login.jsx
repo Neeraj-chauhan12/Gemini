@@ -1,56 +1,48 @@
-import React, { useState } from 'react'
-import { Await, Link, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { authApi, useLoginMutation } from '../Api/AuthApi'
-import toast from 'react-hot-toast'
+import React, { useState } from "react";
+import { Await, Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { authApi, useLoginMutation } from "../Api/AuthApi";
+import toast from "react-hot-toast";
 
 const Login = () => {
- 
-  const [email,setEmail]=useState('')
-  const [password,setPassword]=useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [serverError, setServerError] = useState('')
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const { isAuthenticated } = useSelector((state) => state.authSlice)
-  const [login]=useLoginMutation();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [serverError, setServerError] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
+  const [login] = useLoginMutation();
 
   // Redirect if already logged in
   React.useEffect(() => {
     if (isAuthenticated) {
-      navigate('/chat')
+      navigate("/chat");
     }
-  }, [isAuthenticated, navigate])
-
-
-
-
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    const userData={
-      email:email,
-      password:password
+    e.preventDefault();
+    const userData = {
+      email: email,
+      password: password,
+    };
 
-    }
-
-   
-
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       const result = await login(userData).unwrap();
-      toast.success("login succesfully")
+      toast.success("login succesfully");
 
       if (result) {
-        navigate('/chat')
+        navigate("/chat");
       }
     } catch (error) {
-      setServerError(error?.data?.message || 'Login failed. Please try again.')
-      toast.error(error?.data?.message || 'Login failed. Please try again.')
+      setServerError(error?.data?.message || "Login failed. Please try again.");
+      toast.error(error?.data?.message || "Login failed. Please try again.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 to-blue-100 flex items-center justify-center px-4">
@@ -82,11 +74,10 @@ const Login = () => {
                 type="email"
                 name="email"
                 value={email}
-                onChange={(e)=>setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 className={`w-full px-4 py-3 rounded-lg border-2 transition focus:outline-none `}
               />
-             
             </div>
 
             {/* Password Field */}
@@ -98,11 +89,10 @@ const Login = () => {
                 type="password"
                 name="password"
                 value={password}
-                onChange={(e)=>setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
                 className={`w-full px-4 py-3 rounded-lg border-2 transition focus:outline-none `}
               />
-              
             </div>
 
             {/* Submit Button */}
@@ -111,7 +101,7 @@ const Login = () => {
               disabled={isLoading}
               className="w-full bg-linear-to-r from-blue-600 to-blue-800 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-900 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Logging in...' : 'Login'}
+              {isLoading ? "Logging in..." : "Login"}
             </button>
           </form>
 
@@ -124,7 +114,7 @@ const Login = () => {
 
           {/* Register Link */}
           <p className="text-center text-gray-600">
-            Don't have an account?{' '}
+            Don't have an account?{" "}
             <Link
               to="/register"
               className="text-blue-600 font-semibold hover:text-blue-800 transition"
@@ -135,7 +125,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

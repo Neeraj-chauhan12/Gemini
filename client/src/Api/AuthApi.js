@@ -3,8 +3,8 @@ import { Userlogin, Userlogout } from '../redux/AuthSlice'
 import {DEVELOPMENT_USER} from '../utils/utils.js'
 
 const USER_API =DEVELOPMENT_USER
-  // ? `${DEVELOPMENT_USER}/`
-  // : "http://localhost:3000/api/user/";
+   ? DEVELOPMENT_USER
+   : "http://localhost:3000/api/user";
 
 export const authApi = createApi({
   reducerPath: "authApi",
