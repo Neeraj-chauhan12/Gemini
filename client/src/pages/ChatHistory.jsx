@@ -57,12 +57,12 @@ const ChatHistory = ({ onNewChat, prompts }) => {
   return (
     <div className="h-full flex flex-col bg-gray-50">
       {/* New Chat Button */}
-      <div className="p-4 border-b border-gray-200">
+      <div className="p-3 md:p-4 border-b border-gray-200">
         <button
           onClick={handleNewChat}
-          className="w-full bg-linear-to-r from-blue-600 to-blue-800 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-900 transition flex items-center justify-center space-x-2"
+          className="w-full bg-linear-to-r from-blue-600 to-blue-800 text-white py-2 md:py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-900 transition flex items-center justify-center space-x-2 text-sm md:text-base"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -70,40 +70,41 @@ const ChatHistory = ({ onNewChat, prompts }) => {
               d="M12 4v16m8-8H4"
             />
           </svg>
-          <span>New Chat</span>
+          <span className="hidden sm:inline">New Chat</span>
+          <span className="sm:hidden">New</span>
         </button>
       </div>
 
       {/* Conversation History */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-2">
-        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">
-          Recent Conversations
+      <div className="flex-1 overflow-y-auto p-2 md:p-4 space-y-1 md:space-y-2">
+        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 md:mb-3 px-2">
+          Recent
         </h3>
 
         {conversations.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-gray-500 text-sm">No conversations yet</p>
+            <p className="text-gray-500 text-xs md:text-sm">No conversations yet</p>
           </div>
         ) : (
           conversations.map((conversation) => (
             <div
               key={conversation.id}
-              className={`p-3 rounded-lg cursor-pointer transition group ${
+              className={`p-2 md:p-3 rounded-lg cursor-pointer transition group text-sm md:text-base ${
                 selectedConversation?.id === conversation.id
                   ? 'bg-blue-100 border-2 border-blue-500'
                   : 'hover:bg-gray-100 border-2 border-transparent'
               }`}
               onClick={() => setSelectedConversation(conversation)}
             >
-              <div className="flex items-start justify-between">
+              <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-gray-800 truncate">
-                    {conversation.title}
+                  <p className="text-xs md:text-sm font-semibold text-gray-800 truncate">
+                    {conversation.title.slice(0, 20)}
                   </p>
-                  <p className="text-xs text-gray-600 truncate">
-                    {conversation.preview}
+                  <p className="text-xs text-gray-600 truncate hidden md:block">
+                    {conversation.preview.slice(0, 40)}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 mt-0.5 md:mt-1">
                     {new Date(conversation.date).toLocaleDateString('en-US', {
                       month: 'short',
                       day: 'numeric',
@@ -115,10 +116,10 @@ const ChatHistory = ({ onNewChat, prompts }) => {
                     e.stopPropagation()
                     handleDeleteChat(conversation.id)
                   }}
-                  className="ml-2 p-1.5 opacity-0 group-hover:opacity-100 rounded hover:bg-red-100 transition"
+                  className="ml-1 p-1 md:p-1.5 opacity-100 md:opacity-0 group-hover:opacity-100 rounded hover:bg-red-100 transition flex-shrink-0"
                 >
                   <svg
-                    className="w-4 h-4 text-red-600"
+                    className="w-3 h-3 md:w-4 md:h-4 text-red-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -138,9 +139,9 @@ const ChatHistory = ({ onNewChat, prompts }) => {
       </div>
 
       {/* Footer */}
-      <div className="border-t border-gray-200 p-4 space-y-2">
-        <button className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded transition flex items-center space-x-2">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="border-t border-gray-200 p-2 md:p-4 space-y-1 md:space-y-2">
+        <button className="w-full text-left px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm text-gray-700 hover:bg-gray-100 rounded transition flex items-center space-x-2">
+          <svg className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -154,10 +155,10 @@ const ChatHistory = ({ onNewChat, prompts }) => {
               d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
             />
           </svg>
-          <span>Settings</span>
+          <span className="hidden sm:inline">Settings</span>
         </button>
-        <button className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded transition flex items-center space-x-2">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button className="w-full text-left px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm text-gray-700 hover:bg-gray-100 rounded transition flex items-center space-x-2">
+          <svg className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -165,7 +166,7 @@ const ChatHistory = ({ onNewChat, prompts }) => {
               d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <span>Help</span>
+          <span className="hidden sm:inline">Help</span>
         </button>
       </div>
     </div>
