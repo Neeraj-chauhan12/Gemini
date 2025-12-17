@@ -6,7 +6,7 @@ exports.sendMessage = async (req, res) => {
     try {
         const userId =  req.user.id
         const { message } = req.body
-        console.log("userid",userId)
+       
 
         if (!userId) return res.status(401).json({ message: 'unauthorized' })
         if (!message || typeof message !== 'string' || !message.trim()) {
