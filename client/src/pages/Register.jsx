@@ -102,7 +102,7 @@ const Register = () => {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Enter your full name"
-                className={`w-full px-4 py-3 rounded-lg border-2 transition focus:outline-none ${
+                className={`w-full px-4 py-3 text-black rounded-lg border-2 transition focus:outline-none ${
                   errors.name
                     ? 'border-red-500 focus:border-red-600'
                     : 'border-gray-200 focus:border-blue-500'
@@ -126,7 +126,7 @@ const Register = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Enter your email"
-                className={`w-full px-4 py-3 rounded-lg border-2 transition focus:outline-none ${
+                className={`w-full px-4 py-3 text-black rounded-lg border-2 transition focus:outline-none ${
                   errors.email
                     ? 'border-red-500 focus:border-red-600'
                     : 'border-gray-200 focus:border-blue-500'
@@ -150,7 +150,7 @@ const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Create a strong password"
-                className={`w-full px-4 py-3 rounded-lg border-2 transition focus:outline-none ${
+                className={`w-full px-4 py-3 text-black rounded-lg border-2 transition focus:outline-none ${
                   errors.password
                     ? 'border-red-500 focus:border-red-600'
                     : 'border-gray-200 focus:border-blue-500'
