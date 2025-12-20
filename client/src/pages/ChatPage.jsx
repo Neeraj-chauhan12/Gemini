@@ -117,6 +117,7 @@ const ChatPage = () => {
             setInputValue('')
           }}
           prompts={promptsData?.prompts || []}
+          refreshPrompts={refetchPrompts}
         />
       </div>
 
@@ -162,6 +163,7 @@ const ChatPage = () => {
               setIsSidebarOpen(false)
             }}
             prompts={promptsData?.prompts || []}
+            refreshPrompts={refetchPrompts}
           />
         </div>
       </div>

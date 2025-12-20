@@ -17,7 +17,10 @@ export const chatApi = createApi({
     clearPrompts: builder.mutation({
       query: () => ({ url: '/clear', method: 'DELETE' }),
     }),
+    deleteMessage: builder.mutation({
+      query: (id) => ({ url: `/${id}`, method: 'DELETE' }),
+    }),
   }),
 })
 
-export const { useSendMessageMutation, useGetPromptsQuery, useClearPromptsMutation } = chatApi
+export const { useSendMessageMutation, useGetPromptsQuery, useClearPromptsMutation, useDeleteMessageMutation } = chatApi

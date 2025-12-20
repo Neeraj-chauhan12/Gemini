@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
+import { useDeleteMessageMutation } from '../Api/ChatApi'
 
-const ChatHistory = ({ onNewChat, prompts }) => {
+const ChatHistory = ({ onNewChat, prompts, refreshPrompts }) => {
   const [selectedConversation, setSelectedConversation] = useState(null)
+  const [deleteMessage] = useDeleteMessageMutation()
 
   // Build conversation list from server prompts when provided
   const conversations = Array.isArray(prompts) && prompts.length
@@ -50,8 +52,17 @@ const ChatHistory = ({ onNewChat, prompts }) => {
   }
 
   const handleDeleteChat = (id) => {
-    // For now just clear selection. If connected to API, this should call delete endpoint.
-    setSelectedConversation(null)
+    // call API to delete single prompt and refresh list
+    const run = async () => {
+      try {
+        await deleteMessage(id).unwrap()
+        setSelectedConversation(null)
+        if (typeof refreshPrompts === 'function') refreshPrompts()
+      } catch (err) {
+        console.error('delete message failed', err)
+      }
+    }
+    run()
   }
 
   return (

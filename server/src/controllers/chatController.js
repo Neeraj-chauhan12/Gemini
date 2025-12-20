@@ -86,3 +86,22 @@ exports.clearPrompts = async (req, res) => {
         return res.status(500).json({ message: 'internal server error' })
     }
 }
+
+// Delete a single prompt by id for the authenticated user
+exports.deletePrompt = async (req, res) => {
+    try {
+        const userId = req.user && req.user.id
+        const { id } = req.params
+        if (!userId) return res.status(401).json({ message: 'unauthorized' })
+        if (!id) return res.status(400).json({ message: 'id is required' })
+
+        const prompt = await Prompt.findOne({ _id: id, userId })
+        if (!prompt) return res.status(404).json({ message: 'prompt not found' })
+
+        await Prompt.deleteOne({ _id: id, userId })
+        return res.status(200).json({ message: 'deleted' })
+    } catch (error) {
+        console.error('deletePrompt error:', error)
+        return res.status(500).json({ message: 'internal server error' })
+    }
+}
