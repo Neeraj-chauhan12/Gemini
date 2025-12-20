@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Userlogin, Userlogout } from '../redux/AuthSlice'
 
 
-const USER_API ="http://localhost:3000/api/user";
+const USER_API ="https://gemini-1-8oo0.onrender.com/api/user";
 
 export const authApi = createApi({
   reducerPath: "authApi",
