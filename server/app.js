@@ -15,7 +15,8 @@ dotenv.config();
 
 app.use(
   cors({
-    origin: "https://gemini-1-8oo0.onrender.com" ,
+    //origin: "https://gemini-1-8oo0.onrender.com" ,
+    origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })

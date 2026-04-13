@@ -21,7 +21,7 @@ exports.sendMessage = async (req, res) => {
         })
 
         // Initialize Gemini client
-        const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY
+        const apiKey = process.env.GEMINI_API;
         if (!apiKey) {
             // Do not fail silently: return saved user message but warn client
             return res.status(500).json({ message: 'AI API key not configured' })
