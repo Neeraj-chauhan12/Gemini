@@ -57,8 +57,8 @@ exports.Login=async(req,res)=>{
 
 
     } catch (error) {
-        console.log("error in registration server",error)
-        return res.status(500).json({message:"error in registration server"})
+        console.log("error in login server",error)
+        return res.status(500).json({message:"error in login server"});
         
         
     }
