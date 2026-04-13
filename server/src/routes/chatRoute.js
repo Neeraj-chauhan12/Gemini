@@ -11,7 +11,7 @@ router.post('/send', AuthMiddleware, sendMessage)
 router.get('/', AuthMiddleware, getPrompts)
 
 // Clear all prompts for authenticated user
-router.delete('/clear', AuthMiddleware,clearPrompts)
+router.delete('/clear', AuthMiddleware,clearPrompts);
 
 // Delete a single prompt
 router.delete('/:id', AuthMiddleware, deletePrompt)
