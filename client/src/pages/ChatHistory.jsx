@@ -2,53 +2,18 @@ import React, { useState } from 'react'
 import { useDeleteMessageMutation } from '../Api/ChatApi'
 
 const ChatHistory = ({ onNewChat, prompts, refreshPrompts }) => {
-  const [selectedConversation, setSelectedConversation] = useState(null)
   const [deleteMessage] = useDeleteMessageMutation()
 
-  // Build conversation list from server prompts when provided
-  const conversations = Array.isArray(prompts) && prompts.length
-    ? // group prompts into conversation buckets by pairs (simple linear history)
-      prompts.reduce((acc, cur) => {
-        // create a simple conversation per two messages for display purposes
-        const idx = Math.floor(acc.length)
-        acc.push({
-          id: cur._id,
-          title: cur.role === 'user' ? cur.content.slice(0, 30) : 'Assistant Reply',
-          date: cur.createdAt,
-          preview: cur.content.slice(0, 60),
-        })
-        return acc
-      }, [])
-    : [
-        {
-          id: 1,
-          title: 'First Conversation',
-          date: '2025-12-01',
-          preview: 'Tell me about AI...',
-        },
-        {
-          id: 2,
-          title: 'Web Development Tips',
-          date: '2025-11-30',
-          preview: 'How to build responsive websites...',
-        },
-        {
-          id: 3,
-          title: 'React Best Practices',
-          date: '2025-11-29',
-          preview: 'What are the best practices in React...',
-        },
-        {
-          id: 4,
-          title: 'JavaScript Tricks',
-          date: '2025-11-28',
-          preview: 'Show me advanced JavaScript concepts...',
-        },
-      ]
+  // Build prompt list from server prompts
+  const promptList = Array.isArray(prompts) ? prompts.map(p => ({
+    id: p._id,
+    title: p.role === 'user' ? p.content.slice(0, 30) + '...' : 'Assistant Reply',
+    date: p.createdAt,
+    preview: p.content.slice(0, 60) + '...',
+  })) : []
 
   const handleNewChat = () => {
-    if (typeof onNewChat === 'function') return onNewChat()
-    setSelectedConversation(null)
+    if (typeof onNewChat === 'function') onNewChat()
   }
 
   const handleDeleteChat = (id) => {
@@ -56,7 +21,6 @@ const ChatHistory = ({ onNewChat, prompts, refreshPrompts }) => {
     const run = async () => {
       try {
         await deleteMessage(id).unwrap()
-        setSelectedConversation(null)
         if (typeof refreshPrompts === 'function') refreshPrompts()
       } catch (err) {
         console.error('delete message failed', err)
@@ -92,31 +56,26 @@ const ChatHistory = ({ onNewChat, prompts, refreshPrompts }) => {
           Recent
         </h3>
 
-        {conversations.length === 0 ? (
+        {promptList.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-gray-500 text-xs md:text-sm">No conversations yet</p>
+            <p className="text-gray-500 text-xs md:text-sm">No prompts yet</p>
           </div>
         ) : (
-          conversations.map((conversation) => (
+          promptList.map((prompt) => (
             <div
-              key={conversation.id}
-              className={`p-2 md:p-3 rounded-lg cursor-pointer transition group text-sm md:text-base ${
-                selectedConversation?.id === conversation.id
-                  ? 'bg-blue-100 border-2 border-blue-500'
-                  : 'hover:bg-gray-100 border-2 border-transparent'
-              }`}
-              onClick={() => setSelectedConversation(conversation)}
+              key={prompt.id}
+              className="p-2 md:p-3 rounded-lg transition group text-sm md:text-base border-2 border-transparent"
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 min-w-0">
                   <p className="text-xs md:text-sm font-semibold text-gray-800 truncate">
-                    {conversation.title.slice(0, 20)}
+                    {prompt.title}
                   </p>
                   <p className="text-xs text-gray-600 truncate hidden md:block">
-                    {conversation.preview.slice(0, 40)}
+                    {prompt.preview}
                   </p>
                   <p className="text-xs text-gray-500 mt-0.5 md:mt-1">
-                    {new Date(conversation.date).toLocaleDateString('en-US', {
+                    {new Date(prompt.date).toLocaleDateString('en-US', {
                       month: 'short',
                       day: 'numeric',
                     })}
@@ -125,7 +84,7 @@ const ChatHistory = ({ onNewChat, prompts, refreshPrompts }) => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
-                    handleDeleteChat(conversation.id)
+                    handleDeleteChat(prompt.id)
                   }}
                   className="ml-1 p-1 md:p-1.5 opacity-100 md:opacity-0 group-hover:opacity-100 rounded hover:bg-red-100 transition flex-shrink-0"
                 >

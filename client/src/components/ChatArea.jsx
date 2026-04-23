@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ChatArea = ({ messages, isLoading, setIsSidebarOpen, user ,isSidebarOpen,inputValue,setInputValue,messagesEndRef,handleSendMessage}) => {
+const ChatArea = ({ messages, isLoading, setIsSidebarOpen, user ,isSidebarOpen,inputValue,setInputValue,messagesEndRef,handleSendMessage, error}) => {
   return (
     <>
       <div className="flex-1 flex flex-col">
@@ -103,6 +103,11 @@ const ChatArea = ({ messages, isLoading, setIsSidebarOpen, user ,isSidebarOpen,i
 
         {/* Input Area */}
         <div className="bg-white border-t border-gray-200 p-4">
+          {error && (
+            <div className="mb-3 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+              {error}
+            </div>
+          )}
           <form onSubmit={handleSendMessage} className="flex space-x-3">
             <input
               type="text"
@@ -110,7 +115,7 @@ const ChatArea = ({ messages, isLoading, setIsSidebarOpen, user ,isSidebarOpen,i
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Type your message here..."
               disabled={isLoading}
-              className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 transition disabled:bg-gray-100"
+              className="flex-1 px-4 py-3 border-2 text-black border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 transition disabled:bg-gray-100"
             />
             <button
               type="submit"

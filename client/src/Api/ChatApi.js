@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 
-const CHAT_API="https://gemini-1-8oo0.onrender.com/api/chat";
-//const CHAT_API="http://localhost:3000/api/chat";
+//const CHAT_API="https://gemini-1-8oo0.onrender.com/api/chat";
+const CHAT_API="http://localhost:3000/api/chat";
 
 
 export const chatApi = createApi({

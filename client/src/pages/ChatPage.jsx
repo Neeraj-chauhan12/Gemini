@@ -6,19 +6,13 @@ import ChatArea from '../components/ChatArea'
 
 const ChatPage = () => {
   const { isAuthenticated, user } = useSelector((state) => state.authSlice)
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      text: 'Hello! I am Gemini AI. How can I help you today?',
-      sender: 'bot',
-      timestamp: new Date(),
-    },
-  ])
+  const [messages, setMessages] = useState([])
   const [sendMessage] = useSendMessageMutation()
   const { data: promptsData, refetch: refetchPrompts } = useGetPromptsQuery()
   const [inputValue, setInputValue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [error, setError] = useState('')
   const messagesEndRef = useRef(null)
 
   const scrollToBottom = () => {
@@ -31,20 +25,33 @@ const ChatPage = () => {
 
   // When prompts are loaded from server, reconstruct messages (preserve ordering)
   useEffect(() => {
-    if (promptsData && Array.isArray(promptsData.prompts) && promptsData.prompts.length) {
-      const reconstructed = promptsData.prompts.map((p, idx) => ({
-        id: idx + 1,
-        text: p.content,
-        sender: p.role === 'user' ? 'user' : 'bot',
-        timestamp: new Date(p.createdAt),
-      }))
-      setMessages(reconstructed)
+    if (promptsData && Array.isArray(promptsData.prompts)) {
+      if (promptsData.prompts.length === 0) {
+        setMessages([
+          {
+            id: 1,
+            text: 'Hello! I am Gemini AI. How can I help you today?',
+            sender: 'bot',
+            timestamp: new Date(),
+          },
+        ])
+      } else {
+        const reconstructed = promptsData.prompts.map((p, idx) => ({
+          id: idx + 1,
+          text: p.content,
+          sender: p.role === 'user' ? 'user' : 'bot',
+          timestamp: new Date(p.createdAt),
+        }))
+        setMessages(reconstructed)
+      }
     }
   }, [promptsData])
 
   const handleSendMessage = async (e) => {
     e.preventDefault()
     if (!inputValue.trim()) return
+
+    setError('')
 
     // Add user message
     const userMessage = {
@@ -72,7 +79,9 @@ const ChatPage = () => {
       // refresh history
       refetchPrompts()
     } catch (err) {
-      console.error('sendMessage error', err)
+      setError('Failed to send message. Please try again.')
+      setMessages((prev) => prev.slice(0, -1))
+      setInputValue(userMessage.text)
     } finally {
       setIsLoading(false)
     }
@@ -179,6 +188,7 @@ const ChatPage = () => {
         setInputValue={setInputValue}
         messagesEndRef={messagesEndRef}
         handleSendMessage={handleSendMessage}
+        error={error}
       />
 
     </div>
